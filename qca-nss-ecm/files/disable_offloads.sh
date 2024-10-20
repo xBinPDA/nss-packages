@@ -183,10 +183,11 @@ disable_offload() {
   config_get_bool disable_gro                  general disable_gro 0
   config_get_bool disable_gro_list             general disable_gro_list 1
 
-  [ -z $1 ] && interface=$(echo /sys/class/net/*) || interface=$*
+  [ -z $1 ] && interface=$(echo /sys/class/net/*/device) || interface=$*
 
   for iface in $interface; do
-    i=${iface##*/}
+    i=${iface%/*}
+    i=${i##*/}
 
     # Skip Loopback and Bonding Masters
     if [ $i == lo ] || [ -f $iface ]; then
