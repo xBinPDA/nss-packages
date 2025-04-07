@@ -1,0 +1,26 @@
+--- a/rmnet_nss.c
++++ b/rmnet_nss.c
+@@ -259,7 +259,9 @@ static int rmnet_nss_adjust_header(struc
+ 
+ 	/* subtract to account for skb_push */
+ 	skb->len -= bytes;
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 4, 0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 12, 0))
++	frag->offset += bytes;
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 4, 0))
+ 	frag->bv_offset += bytes;
+ #else
+ 	frag->page_offset += bytes;
+--- a/qmi_wwan_q.c
++++ b/qmi_wwan_q.c
+@@ -2007,8 +2007,8 @@ static void ql_net_get_drvinfo(struct ne
+ {
+ 	/* Inherit standard device info */
+ 	usbnet_get_drvinfo(net, info);
+-	strlcpy(info->driver, driver_name, sizeof(info->driver));
+-	strlcpy(info->version, VERSION_NUMBER, sizeof(info->version));
++	strncpy(info->driver, driver_name, sizeof(info->driver));
++	strncpy(info->version, VERSION_NUMBER, sizeof(info->version));
+ }
+ 
+ static struct ethtool_ops ql_net_ethtool_ops;
