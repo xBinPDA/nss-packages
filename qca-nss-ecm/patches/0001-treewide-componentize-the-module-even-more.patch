@@ -182,17 +182,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  
  	DEBUG_CHECK_MAGIC(ci, ECM_DB_CONNECTION_INSTANCE_MAGIC, "%px: magic failed\n", ci);
  
-@@ -545,7 +547,9 @@ EXPORT_SYMBOL(ecm_db_connection_data_tot
-  */
- void ecm_db_connection_data_totals_update_dropped(struct ecm_db_connection_instance *ci, bool is_from, uint64_t size, uint64_t packets)
- {
-+#ifdef ECM_DB_ADVANCED_STATS_ENABLE
- 	int32_t i;
-+#endif
- 
- 	DEBUG_CHECK_MAGIC(ci, ECM_DB_CONNECTION_INSTANCE_MAGIC, "%px: magic failed\n", ci);
- 
-@@ -1539,6 +1543,7 @@ void ecm_db_connection_defunct_all(void)
+@@ -1539,6 +1541,7 @@ void ecm_db_connection_defunct_all(void)
  }
  EXPORT_SYMBOL(ecm_db_connection_defunct_all);
  
@@ -200,7 +190,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  /*
   * ecm_db_connection_defunct_by_classifier()
   *	Make defunct based on masked fields
-@@ -1705,6 +1710,7 @@ next_ci:
+@@ -1705,6 +1708,7 @@ next_ci:
  				ECM_IP_ADDR_TO_OCTAL(dest_addr_mask), dest_port_mask, proto_mask, cnt);
  	}
  }
@@ -208,7 +198,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  
  /*
   * ecm_db_connection_defunct_by_port()
-@@ -1994,6 +2000,7 @@ struct ecm_db_node_instance *ecm_db_conn
+@@ -1994,6 +1998,7 @@ struct ecm_db_node_instance *ecm_db_conn
  }
  EXPORT_SYMBOL(ecm_db_connection_node_get_and_ref);
  
@@ -216,7 +206,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
  /*
   * ecm_db_connection_mapping_get_and_ref_next()
   *	Return reference to next connection in the mapping chain in the specified direction.
-@@ -2035,6 +2042,7 @@ struct ecm_db_connection_instance *ecm_d
+@@ -2035,6 +2040,7 @@ struct ecm_db_connection_instance *ecm_d
  	return nci;
  }
  EXPORT_SYMBOL(ecm_db_connection_iface_get_and_ref_next);
@@ -226,19 +216,7 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
   * ecm_db_connection_mapping_get_and_ref()
 --- a/ecm_db/ecm_db_node.c
 +++ b/ecm_db/ecm_db_node.c
-@@ -227,9 +227,11 @@ EXPORT_SYMBOL(ecm_db_node_get_and_ref_ne
-  */
- int ecm_db_node_deref(struct ecm_db_node_instance *ni)
- {
-+#ifdef ECM_DB_XREF_ENABLE
- #if (DEBUG_LEVEL >= 1)
- 	int dir;
- #endif
-+#endif
- 	DEBUG_CHECK_MAGIC(ni, ECM_DB_NODE_INSTANCE_MAGIC, "%px: magic failed\n", ni);
- 
- 	spin_lock_bh(&ecm_db_lock);
-@@ -489,9 +491,11 @@ EXPORT_SYMBOL(ecm_db_node_iface_get_and_
+@@ -489,9 +489,11 @@ EXPORT_SYMBOL(ecm_db_node_iface_get_and_
  void ecm_db_node_add(struct ecm_db_node_instance *ni, struct ecm_db_iface_instance *ii, uint8_t *address,
  					ecm_db_node_final_callback_t final, void *arg)
  {
