@@ -70,13 +70,15 @@ EXTRA_CFLAGS+= \
 		 -I$(STAGING_DIR)/usr/include/nat46
 
 ifneq (, $(findstring $(CONFIG_TARGET_BOARD), "qualcommax" "ipq60xx"))
-ECM_MAKE_OPTS+=ECM_FRONT_END_NSS_ENABLE=y \
-			   ECM_FRONT_END_SFE_ENABLE=n \
-			   ECM_NON_PORTED_SUPPORT_ENABLE=y \
+ECM_MAKE_OPTS+= ECM_NON_PORTED_SUPPORT_ENABLE=y \
 			   ECM_INTERFACE_VLAN_ENABLE=y \
 			   ECM_CLASSIFIER_MARK_ENABLE=y \
 			   ECM_CLASSIFIER_DSCP_ENABLE=y \
 			   ECM_CLASSIFIER_PCC_ENABLE=n
+endif
+
+ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv),)
+ECM_MAKE_OPTS+=ECM_FRONT_END_NSS_ENABLE=y
 endif
 
 # Disable ECM IPv6 support when global IPv6 support is disabled.
