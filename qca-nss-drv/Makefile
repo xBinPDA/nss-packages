@@ -79,9 +79,9 @@ define KernelPackage/qca-nss-drv
   SECTION:=kernel
   CATEGORY:=Kernel modules
   SUBMENU:=Network Devices
-  DEPENDS:=@(TARGET_ipq806x||TARGET_qualcommax||TARGET_ipq807x||TARGET_ipq60xx) \
-  				 +!TARGET_ipq806x:kmod-qca-nss-dp \
-  				 +TARGET_qualcommax_ipq807x:nss-firmware-ipq8074
+  DEPENDS:=@(TARGET_ipq806x||TARGET_qualcommax) \
+  				 +TARGET_qualcommax:kmod-qca-nss-dp \
+  				 +TARGET_qualcommax:nss-firmware
   TITLE:=Kernel driver for NSS (core driver)
   FILES:=$(PKG_BUILD_DIR)/qca-nss-drv.ko
   AUTOLOAD:=$(call AutoLoad,32,qca-nss-drv)
