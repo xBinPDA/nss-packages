@@ -33,7 +33,7 @@ STRIP:=:
 
 NSS_PROFILE:=R
 
-define nss-firmware-common
+define Package/nss-firmware-common
 	TITLE:=NSS firmware
 	SECTION:=firmware
 	CATEGORY:=Firmware
@@ -42,27 +42,27 @@ define nss-firmware-common
 endef
 
 define Package/nss-firmware
-$(nss-firmware-common)
+$(call Package/nss-firmware-common,$(1))
 	DEPENDS+= +TARGET_qualcommax_ipq807x:nss-firmware-ipq807x \
 		  +TARGET_qualcommax_ipq60xx:nss-firmware-ipq60xx \
 		  +TARGET_qualcommax_ipq50xx:nss-firmware-ipq50xx
 endef
 
 define Package/nss-firmware-ipq807x
-$(nss-firmware-common)
+$(call Package/nss-firmware-common,$(1))
 	IPQ_PLATFORM=IPQ8074
 	NSS_SOC:=HK
 endef
 
 define Package/nss-firmware-ipq60xx
-$(nss-firmware-common)
+$(call Package/nss-firmware-common,$(1))
 	IPQ_PLATFORM=IPQ6018
 	CONFLICTS=nss-firmware-ipq807x
 	NSS_SOC:=CP
 endef
 
 define Package/nss-firmware-ipq50xx
-$(nss-firmware-common)
+$(call Package/nss-firmware-common,$(1))
 	IPQ_PLATFORM=IPQ5018
 	CONFLICTS=nss-firmware-ipq807x nss-firmware-ipq60xx
 	NSS_SOC:=MP
@@ -84,6 +84,7 @@ define Package/nss-firmware/config
 
     config NSS_FIRMWARE_VERSION_12_2
           bool "NSS Firmware 12.2 Release 161"
+          depends on !TARGET_qualcommax_ipq50xx
           help
                This version does NOT work with NSS MESH (802.11s)
 
@@ -125,7 +126,7 @@ endif
 define Build/Compile
 endef
 
-define Package/nss-firmware/install
+define Package/nss-firmware-common/install
 	$(INSTALL_DIR) $(PKG_BUILD_DIR)/$(IPQ_PLATFORM)
 	$(TAR) --strip-components=1 -C $(PKG_BUILD_DIR)/$(IPQ_PLATFORM) -xf \
 		$(VERSION_PATH)/$(IPQ_PLATFORM).ATH.$(NSS_MAJOR).$(NSS_MINOR)/BIN-NSS*.$(NSS_MAJOR).$(NSS_MINOR)*-$(NSS_REL)*$(NSS_PROFILE).tar.bz2
@@ -141,15 +142,15 @@ endif
 endef
 
 define Package/nss-firmware-ipq807x/install
-	$(call Package/nss-firmware/install,$(1))
+	$(call Package/nss-firmware-common/install,$(1))
 endef
 
 define Package/nss-firmware-ipq60xx/install
-	$(call Package/nss-firmware/install,$(1))
+	$(call Package/nss-firmware-common/install,$(1))
 endef
 
 define Package/nss-firmware-ipq50xx/install
-	$(call Package/nss-firmware/install,$(1))
+	$(call Package/nss-firmware-common/install,$(1))
 endef
 
 define Package/nss-firmware/install
