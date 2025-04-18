@@ -251,6 +251,15 @@
  
 --- a/pvxlanmgr/nss_pvxlanmgr.c
 +++ b/pvxlanmgr/nss_pvxlanmgr.c
+@@ -180,7 +180,7 @@ static struct rtnl_link_stats64 *nss_pvx
+ 	atomic_long_set(&(dev)->stats.__rx_dropped, 0);
+ 	priv = netdev_priv(dev);
+ 	memset(stats, 0, sizeof(struct rtnl_link_stats64));
+-	memcpy(stats, &priv->stats, sizeof(struct rtnl_link_stats64));
++	*stats = priv->stats;
+ 	dev_put(dev);
+ 
+ 	return stats;
 @@ -408,7 +408,7 @@ nss_pvxlanmgr_status_t nss_pvxlanmgr_net
  	if (ret != NSS_TX_SUCCESS) {
  		nss_pvxlanmgr_warn("%px: Tunnel disable failed: %d\n", dev, ret);
@@ -406,7 +415,7 @@
  	v->eg_xlt_rule.vsi = vsi;		/* Use vsi as search key*/
  	v->eg_xlt_rule.s_tagged = 0x7;		/* Accept tagged/untagged/priority tagged svlan */
  	v->eg_xlt_rule.c_tagged = 0x7;		/* Accept tagged/untagged/priority tagged cvlan */
-@@ -1817,8 +1817,8 @@ void nss_vlan_mgr_add_vlan_rule(struct n
+@@ -1805,8 +1805,8 @@ void nss_vlan_mgr_add_vlan_rule(struct n
  	/*
  	 * Fields for match
  	 */
@@ -417,7 +426,7 @@
  	eg_xlt_rule.vsi = bridge_vsi;	/* Use vsi as search key */
  	eg_xlt_rule.s_tagged = 0x7;	/* Accept tagged/untagged/priority tagged svlan */
  	eg_xlt_rule.c_tagged = 0x7;	/* Accept tagged/untagged/priority tagged cvlan */
-@@ -1885,8 +1885,8 @@ void nss_vlan_mgr_del_vlan_rule(struct n
+@@ -1873,8 +1873,8 @@ void nss_vlan_mgr_del_vlan_rule(struct n
  	/*
  	 * Fields for match
  	 */

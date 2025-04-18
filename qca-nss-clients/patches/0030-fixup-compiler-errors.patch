@@ -73,6 +73,26 @@
  	}
  
  	nss_qdisc_info("Enable SSDK level0 queue scheduler successful\n");
+@@ -589,15 +589,15 @@ static void nss_ppe_assigned_queue_enabl
+ 	spin_lock_bh(&ppe_port->lock);
+ 	res = ppe_port->res_used[NSS_PPE_UCAST_QUEUE];
+ 	while (res) {
+-		fal_qm_enqueue_ctrl_set(0, qid + res->offset, true);
+-		fal_scheduler_dequeue_ctrl_set(0, qid + res->offset, true);
++		fal_qm_enqueue_ctrl_set(0, qid + res->offset, (a_bool_t)true);
++		fal_scheduler_dequeue_ctrl_set(0, qid + res->offset, (a_bool_t)true);
+ 		res = res->next;
+ 	}
+ 
+ 	res = ppe_port->res_used[NSS_PPE_MCAST_QUEUE];
+ 	while (res) {
+-		fal_qm_enqueue_ctrl_set(0, mcast_qid + res->offset, true);
+-		fal_scheduler_dequeue_ctrl_set(0, mcast_qid + res->offset, true);
++		fal_qm_enqueue_ctrl_set(0, mcast_qid + res->offset, (a_bool_t)true);
++		fal_scheduler_dequeue_ctrl_set(0, mcast_qid + res->offset, (a_bool_t)true);
+ 		res = res->next;
+ 	}
+ 
 @@ -642,7 +642,7 @@ static int nss_ppe_l1_queue_scheduler_co
  	l1cfg.e_pri = NSS_PPE_PRIORITY_MAX - npq->scheduler.priority;
  	l1cfg.c_drr_id = npq->l1c_drrid;
@@ -440,3 +460,27 @@
  	case NSS_WIFI_MESH_US_MESH_PATH_NOT_FOUND:
  		ifnum = decap_ifnum;
  		break;
+@@ -1702,10 +1699,10 @@ nss_wifi_meshmgr_config_mesh_exception_s
+ 	ret = wait_for_completion_timeout(&wmesh_ctx->complete, msecs_to_jiffies(NSS_WIFI_MESH_TX_TIMEOUT));
+ 	if (!ret) {
+ 		nss_wifi_meshmgr_warn("%px: WiFi mesh msg tx failed due to timeout\n", &wmgr_ctx);
+-		wmesh_ctx->response = NSS_WIFI_MESHMGR_FAILURE_SYNC_TIMEOUT;
++		wmesh_ctx->response = (nss_tx_status_t)NSS_WIFI_MESHMGR_FAILURE_SYNC_TIMEOUT;
+ 	}
+ 
+-	nss_status = wmesh_ctx->response;
++	nss_status = (nss_wifi_meshmgr_status_t)wmesh_ctx->response;
+ 	up(&wmesh_ctx->sem);
+ 
+ 	nss_wifi_meshmgr_ref_dec(wmesh_ctx);
+--- a/netlink/nss_nlipsec.c
++++ b/netlink/nss_nlipsec.c
+@@ -228,7 +228,7 @@ static void nss_nlipsec_process_event(vo
+ 	/*
+ 	 * Initialize the NETLINK common header
+ 	 */
+-	nss_nlipsec_rule_init(nl_rule, ev->type);
++	nss_nlipsec_rule_init(nl_rule, (enum nss_nlipsec_cmd)ev->type);
+ 
+ 	/*
+ 	 * Copy the contents of the sync message into the NETLINK message
