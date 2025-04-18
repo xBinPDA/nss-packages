@@ -163,6 +163,7 @@ config NSS_DRV_QVPN_ENABLE
 	bool
 	default n
 	prompt "Enable OpenVpn (QVPN)"
+	depends on TARGET_qualcommax_ipq807x || TARGET_qualcommax_ipq60xx
 
 config NSS_DRV_RMNET_ENABLE
 	bool
@@ -250,5 +251,6 @@ config NSS_DRV_WIFI_MESH_ENABLE
 config NSS_DRV_WIFI_LEGACY_ENABLE
 	bool
 	default n
+	depends on TARGET_ipq806x
 	prompt "Enable Legacy WIFI"
 endmenu
