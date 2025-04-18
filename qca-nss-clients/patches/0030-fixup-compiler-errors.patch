@@ -460,19 +460,6 @@
  	case NSS_WIFI_MESH_US_MESH_PATH_NOT_FOUND:
  		ifnum = decap_ifnum;
  		break;
-@@ -1702,10 +1699,10 @@ nss_wifi_meshmgr_config_mesh_exception_s
- 	ret = wait_for_completion_timeout(&wmesh_ctx->complete, msecs_to_jiffies(NSS_WIFI_MESH_TX_TIMEOUT));
- 	if (!ret) {
- 		nss_wifi_meshmgr_warn("%px: WiFi mesh msg tx failed due to timeout\n", &wmgr_ctx);
--		wmesh_ctx->response = NSS_WIFI_MESHMGR_FAILURE_SYNC_TIMEOUT;
-+		wmesh_ctx->response = (nss_tx_status_t)NSS_WIFI_MESHMGR_FAILURE_SYNC_TIMEOUT;
- 	}
- 
--	nss_status = wmesh_ctx->response;
-+	nss_status = (nss_wifi_meshmgr_status_t)wmesh_ctx->response;
- 	up(&wmesh_ctx->sem);
- 
- 	nss_wifi_meshmgr_ref_dec(wmesh_ctx);
 --- a/netlink/nss_nlipsec.c
 +++ b/netlink/nss_nlipsec.c
 @@ -228,7 +228,7 @@ static void nss_nlipsec_process_event(vo
