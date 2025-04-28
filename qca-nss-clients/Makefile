@@ -662,7 +662,7 @@ EXTRA_CFLAGS += -DNSS_CAPWAPMGR_ONE_NETDEV
 endif
 
 ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-tun6rd),)
-NSS_CLIENTS_MAKE_OPTS+=tun6rd=y
+NSS_CLIENTS_MAKE_OPTS+=tun6rd=m
 endif
 
 ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-dtlsmgr),)
@@ -671,7 +671,7 @@ endif
 
 ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-tlsmgr),)
 EXTRA_CFLAGS+= -I$(PKG_BUILD_DIR)/exports
-NSS_CLIENTS_MAKE_OPTS+=tlsmgr=y
+NSS_CLIENTS_MAKE_OPTS+=tlsmgr=m
 endif
 
 ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-l2tpv2),)
