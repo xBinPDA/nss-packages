@@ -31,7 +31,8 @@ define KernelPackage/qca-nss-crypto
 	DEPENDS:=@(TARGET_qualcommax||TARGET_ipq806x) \
 		  +kmod-qca-nss-drv \
 		  +@NSS_DRV_CRYPTO_ENABLE \
-		  +@(TARGET_qualcommax_ipq807x||TARGET_qualcommax_ipq60xx):nss-eip-firmware
+		  +TARGET_qualcommax_ipq807x:nss-eip-firmware \
+		  +TARGET_qualcommax_ipq60xx:nss-eip-firmware
 	TITLE:=Kernel driver for NSS crypto driver
 	FILES:=$(PKG_BUILD_DIR)/$(NSS_CRYPTO_DIR)/src/qca-nss-crypto.ko \
 	$(PKG_BUILD_DIR)/$(NSS_CRYPTO_DIR)/tool/qca-nss-crypto-tool.ko
