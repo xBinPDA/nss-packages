@@ -20,7 +20,8 @@ PKG_BUILD_FLAGS:=gc-sections lto
 define KernelPackage/pcie_mhi
   SUBMENU:=WWAN Support
   TITLE:=Kernel pcie driver for MHI device
-  DEPENDS:=+pciids +pciutils +quectel-cm +kmod-qmi_wwan_q
+  DEPENDS:=@(TARGET_qualcommax_ipq807x||TARGET_qualcommax_ipq50xx) \
+	    +pciids +pciutils +quectel-cm +kmod-qmi_wwan_q
   FILES:=$(PKG_BUILD_DIR)/pcie_mhi.ko
   AUTOLOAD:=$(call AutoLoad,90,pcie_mhi)
 endef
