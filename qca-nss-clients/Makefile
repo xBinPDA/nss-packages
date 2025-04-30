@@ -127,7 +127,7 @@ define KernelPackage/qca-nss-drv-tlsmgr
   DEPENDS:=@(TARGET_qualcommax_ipq807x||TARGET_qualcommax_ipq60xx) \
 	   +kmod-qca-nss-drv \
 	   +@NSS_DRV_TLS_ENABLE \
-	   +PACKAGE_kmod-qca-nss-cfi-cryptoapi:kmod-qca-nss-cfi-cryptoapi
+	   +kmod-qca-nss-cfi-cryptoapi
   FILES:=$(PKG_BUILD_DIR)/tls/qca-nss-tlsmgr.ko
 endef
 
@@ -372,7 +372,7 @@ define KernelPackage/qca-nss-drv-qdisc
 	   +kmod-qca-nss-drv \
 	   +@NSS_DRV_SHAPER_ENABLE \
 	   +@NSS_DRV_IGS_ENABLE \
-	   +(!TARGET_qualcommax_ipq50xx):kmod-qca-nss-drv-bridge-mgr
+	   +!TARGET_qualcommax_ipq50xx:kmod-qca-nss-drv-bridge-mgr
   FILES:=$(PKG_BUILD_DIR)/nss_qdisc/qca-nss-qdisc.ko
   KCONFIG:=CONFIG_NET_CLS_ACT=y
 endef
