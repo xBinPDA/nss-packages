@@ -1,6 +1,6 @@
 --- a/v2.0/src/nss_crypto_ctrl.c
 +++ b/v2.0/src/nss_crypto_ctrl.c
-@@ -831,7 +831,7 @@ void nss_crypto_process_event(void *app_
+@@ -833,7 +833,7 @@ void nss_crypto_process_event(void *app_
   * nss_crypto_free()
   *	Free crypto context
   */
@@ -9,7 +9,7 @@
  {
  	struct nss_crypto_ctrl *ctrl = &g_control;
  	int32_t status;
-@@ -891,7 +891,7 @@ free:
+@@ -893,7 +893,7 @@ free:
   * possible that the host to NSS queue is busy in which
   * case we need to retry.
   */
@@ -18,7 +18,7 @@
  {
  	struct nss_crypto_ctrl *ctrl = &g_control;
  	struct nss_crypto_ctx *ctx;
-@@ -1242,7 +1242,7 @@ void nss_crypto_engine_free(struct nss_c
+@@ -1244,7 +1244,7 @@ void nss_crypto_engine_free(struct nss_c
   * nss_crypto_ndev_setup()
   *	setup the dummy netdevice
   */
@@ -27,7 +27,7 @@
  {
  	nss_crypto_info("%px: dummy netdevice for crypto\n", dev);
  }
-@@ -1573,11 +1573,10 @@ static int nss_crypto_device_probe(struc
+@@ -1575,11 +1575,10 @@ static int nss_crypto_device_probe(struc
   * nss_crypto_device_remove()
   *	remove crypto device and deregister everything
   */
@@ -40,7 +40,19 @@
  };
  
  /*
-@@ -1654,7 +1653,7 @@ static int nss_crypto_probe(struct platf
+@@ -1588,7 +1587,11 @@ static int nss_crypto_device_remove(stru
+  */
+ static struct platform_driver nss_crypto_device = {
+ 	.probe		= nss_crypto_device_probe,
++#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 11, 0)
++	.remove_new	= nss_crypto_device_remove,
++#else
+ 	.remove		= nss_crypto_device_remove,
++#endif
+ 	.driver		= {
+ 		.owner	= THIS_MODULE,
+ 		.name	= "nss-crypto-device",
+@@ -1656,7 +1659,7 @@ static int nss_crypto_probe(struct platf
   * nss_crypto_remove()
   *	remove the crypto driver
   */
@@ -49,7 +61,7 @@
  {
  	struct nss_crypto_ctrl *ctrl = platform_get_drvdata(pdev);
  
-@@ -1668,7 +1667,6 @@ static int nss_crypto_remove(struct plat
+@@ -1670,7 +1673,6 @@ static int nss_crypto_remove(struct plat
  	 * Clear the active state of driver
  	 */
  	ctrl->active = false;
@@ -57,7 +69,19 @@
  }
  
  /*
-@@ -1689,7 +1687,7 @@ static struct platform_driver nss_crypto
+@@ -1679,7 +1681,11 @@ static int nss_crypto_remove(struct plat
+  */
+ static struct platform_driver nss_crypto_drv = {
+ 	.probe		= nss_crypto_probe,
++#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 11, 0)
++	.remove_new	= nss_crypto_remove,
++#else
+ 	.remove		= nss_crypto_remove,
++#endif
+ 	.driver		= {
+ 		.owner	= THIS_MODULE,
+ 		.name	= "nss-crypto",
+@@ -1691,7 +1697,7 @@ static struct platform_driver nss_crypto
   * nss_crypto_delayed_probe()
   * 	delayed sequence to initialize crypto after NSS FW is initialized
   */
@@ -303,7 +327,7 @@
  				struct resource *res, uint32_t offset)
  {
  	struct nss_crypto_node *node = platform_get_drvdata(pdev);
-@@ -546,7 +546,7 @@ int nss_crypto_eip197_engine_init(struct
+@@ -550,7 +550,7 @@ int nss_crypto_eip197_engine_init(struct
   * nss_crypto_eip197_node_init()
   *	allocate & initialize eip197 node
   */
