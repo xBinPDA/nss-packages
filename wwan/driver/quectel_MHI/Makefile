@@ -32,7 +32,9 @@ endef
 
 EXTRA_CFLAGS+= \
 	-I$(STAGING_DIR)/usr/include/qca-nss-drv \
-	-Wno-unused-function
+	-Wno-unused-function \
+	-Wno-missing-prototypes \
+	-Wno-missing-declarations
 
 MAKE_OPTS:= \
 	ARCH="$(LINUX_KARCH)" \

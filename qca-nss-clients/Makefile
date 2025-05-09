@@ -810,12 +810,16 @@ ifneq ($(CONFIG_PACKAGE_kmod-qca-nss-drv-wifi-meshmgr),)
 NSS_CLIENTS_MAKE_OPTS+=wifi-meshmgr=y
 endif
 
+EXTRA_CFLAGS+= -Wno-incompatible-pointer-types \
+	-Wno-missing-prototypes -Wno-int-conversion \
+	-Wno-missing-declarations
+
 define Build/Compile
 	+$(MAKE) -C "$(LINUX_DIR)" $(strip $(NSS_CLIENTS_MAKE_OPTS)) \
 	  CROSS_COMPILE="$(TARGET_CROSS)" \
 	  ARCH="$(LINUX_KARCH)" \
 	  M="$(PKG_BUILD_DIR)" \
-	  EXTRA_CFLAGS="$(EXTRA_CFLAGS)" \
+	  EXTRA_CFLAGS="$(EXTRA_CFLAGS) -include $(PKG_BUILD_DIR)/compat.h" \
 	  DTLSMGR_DIR="$(DTLSMGR_DIR)" \
 	  IPSECMGR_DIR="$(IPSECMGR_DIR)" \
 	  SoC=$(SOC) \
