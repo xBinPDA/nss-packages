@@ -100,3 +100,14 @@
 +	return (nss_tx_status_t)lag_msg_state.response;
  }
  EXPORT_SYMBOL(nss_lag_tx_slave_state);
+--- a/nss_n2h.c
++++ b/nss_n2h.c
+@@ -998,7 +998,7 @@ static int nss_n2h_wifi_payloads_handler
+  * nss_n2h_get_qos_mem_size_cfg_handler()
+  *	Gets the QoS memory pool size
+  */
+-static int nss_n2h_get_qos_mem_size_cfg_handler(struct ctl_table *ctl,
++static int nss_n2h_get_qos_mem_size_cfg_handler(const struct ctl_table *ctl,
+ 			int write, void __user *buffer,
+ 			size_t *lenp, loff_t *ppos)
+ {

@@ -44,7 +44,7 @@
  ccflags-y += -I$(obj)/nss_data_plane/hal/include
  ccflags-y += -DNSS_PM_DEBUG_LEVEL=0 -DNSS_SKB_REUSE_SUPPORT=1
 -ccflags-y += -Wall -Werror
-+ccflags-y += -Wall -Werror -Wno-missing-declarations -Wno-missing-prototypes
++ccflags-y += -Wall -Werror -Wno-missing-declarations -Wno-missing-prototypes -Wno-empty-body
  
  KERNELVERSION := $(word 1, $(subst ., ,$(KERNELVERSION))).$(word 2, $(subst ., ,$(KERNELVERSION)))
  
