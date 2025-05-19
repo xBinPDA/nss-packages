@@ -834,3 +834,19 @@
  		if (IS_ERR(rt4)) {
  			return NULL;
  		}
+--- a/bridge/Makefile
++++ b/bridge/Makefile
+@@ -1,4 +1,4 @@
+-ccflags-y := -I$(obj)/../exports -I$(obj)/..  -I$(obj)/nss_hal/include
++ccflags-y := -I$(obj)/../exports -I$(obj)/..  -I$(obj)/nss_hal/include -include $(obj)/../compat.h
+ ccflags-y += -DNSS_CLIENT_BUILD_ID="$(BUILD_ID)"
+ ccflags-$(NSS_BRIDGE_MGR_OVS_ENABLE) += -DNSS_BRIDGE_MGR_OVS_ENABLE
+ 
+--- a/vlan/Makefile
++++ b/vlan/Makefile
+@@ -1,4 +1,4 @@
+-ccflags-y := -I$(obj)/../exports -I$(obj)/..  -I$(obj)/nss_hal/include
++ccflags-y := -I$(obj)/../exports -I$(obj)/..  -I$(obj)/nss_hal/include -include $(obj)/../compat.h
+ ccflags-y += -DNSS_CLIENT_BUILD_ID="$(BUILD_ID)"
+ 
+ obj-m += qca-nss-vlan.o
