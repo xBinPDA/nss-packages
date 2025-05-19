@@ -812,7 +812,7 @@ endif
 
 EXTRA_CFLAGS+= -Wno-incompatible-pointer-types \
 	-Wno-missing-prototypes -Wno-int-conversion \
-	-Wno-missing-declarations
+	-Wno-missing-declarations -Wno-empty-body
 
 define Build/Compile
 	+$(MAKE) -C "$(LINUX_DIR)" $(strip $(NSS_CLIENTS_MAKE_OPTS)) \
