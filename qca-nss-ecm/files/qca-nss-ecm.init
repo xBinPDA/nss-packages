@@ -20,6 +20,7 @@
 # at boot.
 
 START=26
+USE_PROCD=1
 
 sysctl_update() {
   local name value file
@@ -58,6 +59,17 @@ get_front_end_mode() {
   esac
 }
 
+disable_packet_steering() {
+  uci -q set network.globals.packet_steering=0 && uci commit network.globals.packet_steering
+  uci -q del network.globals.steering_flows    && uci commit network.globals.steering_flows
+
+  if [ -e "/usr/libexec/platform/packet-steering.sh" ]; then
+    /usr/libexec/platform/packet-steering.sh 0
+  else
+    /usr/libexec/network/packet-steering.uc -l 0 0
+  fi
+}
+
 disable_bridge_filtering() {
   sysctl_update net.bridge.bridge-nf-call-arptables 0
   sysctl_update net.bridge.bridge-nf-call-iptables 0
@@ -80,13 +92,30 @@ enable_bridge_filtering() {
   fi
 }
 
+set_front_end() {
+  local get_front_end_mode=${1:-0}
+  local module_conf=/etc/modules.conf
+  [ ! -r "$module_conf" ] && touch "$module_conf"
+  # If "options ecm" exists, modify or append front_end_selection
+  if grep -q "^options ecm" "$module_conf"; then
+    if grep -q "front_end_selection=" "$module_conf"; then
+      sed -i -E "s/(options ecm.*)front_end_selection=[0-9]+/\1front_end_selection=$get_front_end_mode/" "$module_conf"
+    else
+      # Append front_end_selection if missing
+      sed -i -E "s/^(options ecm.*)/\1 front_end_selection=$get_front_end_mode/" "$module_conf"
+    fi
+  else
+    # Add new "options ecm" line
+    echo "options ecm front_end_selection=$get_front_end_mode" >> "$module_conf"
+  fi
+}
+
 load_ecm() {
   [ -d /sys/module/ecm ] || {
     local get_front_end_mode
     get_front_end_mode="$(get_front_end_mode)"
     modinfo ecm | awk '/depends/{gsub(",","\n",$NF);print $NF}' | xargs -r -n 1 modprobe
-    touch /etc/modules.conf
-    grep -q "options ecm" /etc/modules.conf || echo "options ecm front_end_selection=$get_front_end_mode" >> /etc/modules.conf
+    set_front_end $get_front_end_mode
     modprobe ecm
     echo 1 > /sys/kernel/debug/ecm/ecm_classifier_default/accel_delay_pkts
   }
@@ -136,8 +165,19 @@ unload_ecm() {
   fi
 }
 
-start() {
+service_triggers() {
+  procd_add_reload_trigger "network"
+  procd_add_reload_trigger "packet_steering"
+}
+
+reload_service() {
+  disable_packet_steering
+}
+
+start_service() {
   load_ecm
+
+  disable_packet_steering
 
   # Only enable bridge filtering if using deprecated fw3
   if [ ! -r /sbin/fw4 ]; then
@@ -154,7 +194,7 @@ start() {
   fi
 }
 
-stop() {
+stop_service() {
   # If ECM is already not loaded, just return
   if [ ! -d /sys/module/ecm ]; then
     return
