@@ -111,3 +111,27 @@
  			int write, void __user *buffer,
  			size_t *lenp, loff_t *ppos)
  {
+--- a/nss_ppe_vp.c
++++ b/nss_ppe_vp.c
+@@ -779,8 +779,7 @@ static struct ctl_table nss_ppe_vp_table
+ 		.maxlen         = sizeof(nss_ppe_vp_cmd),
+ 		.mode           = 0644,
+ 		.proc_handler   = &nss_ppe_vp_destroy_handler,
+-	},
+-	{ }
++	}
+ };
+ 
+ static struct ctl_table_header *nss_ppe_vp_procfs_header;
+--- a/nss_pppoe.c
++++ b/nss_pppoe.c
+@@ -349,8 +349,7 @@ static struct ctl_table nss_pppoe_table[
+ 		.maxlen                 = sizeof(int),
+ 		.mode                   = 0644,
+ 		.proc_handler           = &nss_pppoe_br_accel_mode_handler,
+-	},
+-	{ }
++	}
+ };
+ 
+ static struct ctl_table_header *nss_pppoe_header;
